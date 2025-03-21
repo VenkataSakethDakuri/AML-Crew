@@ -1,0 +1,14 @@
+Prediction_task:
+  description: >
+    given the user input on several parameter, need to use the model to predict the output.
+  expected_output: >
+    The prediction of the model, which is the output of the model.
+  agent: Predictor
+
+Reporting_task:
+  description: >
+    Review the context you got from the predictor and create a report based on that.
+    Make sure the report is detailed and contains any and all relevant information.
+  expected_output: >
+    A full fledged markdown report with all the details and information.
+  agent: Analyst
