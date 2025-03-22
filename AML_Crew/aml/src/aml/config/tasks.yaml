@@ -1,14 +1,88 @@
 Prediction_task:
   description: >
-    given the user input on several parameter, need to use the model to predict the output.
+    Analyze the transaction details provided by the user and predict whether it's fraudulent or not.
+    Use the model to make the prediction and provide a confidence score.
+    Required transaction details include: sender bank code, sender account, receiver bank code,
+    receiver account, amount received, receiving currency, amount paid, payment currency,
+    payment format, date, day of week, and time.
   expected_output: >
-    The prediction of the model, which is the output of the model.
+    A prediction indicating whether the transaction is fraudulent or not, along with a confidence score
+    and the transaction details used for the prediction.
   agent: Predictor
 
 Reporting_task:
   description: >
-    Review the context you got from the predictor and create a report based on that.
-    Make sure the report is detailed and contains any and all relevant information.
+    Using the prediction result from the Predictor agent, create a detailed explanatory report.
+    Analyze the transaction data, identify risk factors, and explain why the model flagged the transaction
+    as suspicious or why it was deemed legitimate. The report should include visualizations and
+    detailed explanations of the key factors that influenced the prediction.
   expected_output: >
-    A full fledged markdown report with all the details and information.
+    A comprehensive markdown report that includes transaction details, prediction results, 
+    confidence score, key risk factors, and detailed explanations of what factors contributed
+    to the prediction.
   agent: Analyst
+
+Case_creation_task:
+  description: >
+    Create a new AML investigation case based on transaction data and initial risk assessment.
+    Assign a case ID, set status to "new", and calculate initial priority score.
+  expected_output: >
+    Confirmation of case creation with case ID and initial priority score.
+  agent: CaseManager
+
+Case_update_task:
+  description: >
+    Update the status of an existing case as it progresses through the investigation workflow.
+    Valid statuses are: new, assigned, in_progress, pending, resolved.
+  expected_output: >
+    Confirmation of status update with case ID and new status.
+  agent: CaseManager
+
+Case_prioritization_task:
+  description: >
+    Analyze risk factors of a case and calculate a priority score to ensure high-risk
+    cases are investigated first. Update the case priority based on new information.
+  expected_output: >
+    Updated priority score with explanation of risk factors considered.
+  agent: CaseManager
+
+Case_management_task:
+  description: >
+    View case details or list all cases sorted by priority to manage the investigation workflow.
+    This helps prioritize resources and ensure high-risk cases are addressed promptly.
+  expected_output: >
+    List of cases sorted by priority or detailed information about a specific case.
+  agent: CaseManager
+
+Sanctions_check_task:
+  description: >
+    Validate transaction details against global sanction lists including OFAC, EU, 
+    UN, and UK sanctions databases. Check whether any entities or individuals 
+    involved in the transaction are on these lists. Flag any potential matches 
+    with high confidence for immediate action.
+  expected_output: >
+    A detailed report on sanctions screening results, including any matches found, 
+    the confidence level of matches, and recommended actions based on findings.
+  agent: ComplianceAnalyst
+
+PEP_check_task:
+  description: >
+    Cross-check all individuals and entities involved in the transaction against 
+    the Politically Exposed Persons (PEP) database. Identify if any parties are 
+    political figures, their family members, or close associates who require 
+    enhanced due diligence under regulatory requirements.
+  expected_output: >
+    A comprehensive report indicating whether any PEPs are involved in the transaction, 
+    their risk level, political position, and recommended enhanced due diligence measures.
+  agent: ComplianceAnalyst
+
+Compliance_validation_task:
+  description: >
+    Perform a complete regulatory compliance check on the transaction by validating 
+    against both sanctions lists and PEP databases. Analyze the risk factors and 
+    provide a comprehensive compliance recommendation based on all findings.
+  expected_output: >
+    A consolidated compliance report with overall compliance status (CLEARED, FLAGGED, 
+    or BLOCKED), detailed explanation of any matches found, risk assessment, and 
+    specific recommendations for handling the transaction in accordance with regulations.
+  agent: ComplianceAnalyst
